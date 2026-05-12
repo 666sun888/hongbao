@@ -12,8 +12,7 @@ jobs:
           distribution: 'temurin'
       - uses: android-actions/setup-android@v3
       - run: npm install -g @bubblewrap/cli
-      - run: printf '\n\n\n\n\n\n\n\n\n\n' | bubblewrap init --manifest "https://666sun888.github.io/hongbao/manifest.json" --directory twa
-
+      - run: printf 'n\n' | bubblewrap init --manifest "https://666sun888.github.io/hongbao/manifest.json" --directory twa
       - run: cd twa && bubblewrap build
       - uses: actions/upload-artifact@v4
         with:
