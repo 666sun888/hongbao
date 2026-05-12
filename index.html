@@ -113,7 +113,9 @@ function startPlay() {
         mainScreen.classList.add('hidden');
         playingScreen.classList.remove('hidden');
     }).catch(() => {
-        alert('请点击按钮播放');
+        mainScreen.classList.add('hidden');
+        playingScreen.classList.remove('hidden');
+        document.querySelector('.playing-text').textContent = '🎵 正在尝试加载...';
     });
 }
 
@@ -122,11 +124,22 @@ audio.addEventListener('ended', () => {
     setTimeout(() => { window.close(); }, 2000);
 });
 
+const sources = [
+    'https://music.163.com/song/media/outer/url?id=1916556888.mp3',
+    'https://link.hhtjim.com/163/1916556888.mp3',
+    'https://api.qqsuu.cn/api/dm-music?type=json&mid=1916556888&wplink=1'
+];
+let srcIdx = 0;
+
 audio.addEventListener('error', () => {
-    audio.src = 'https://webfs.yun.kugou.com/202605121930/acf7eb1b4e8f5c9d2a1b3c4d5e6f7a8b/G244/M05/1E/0B/pQ0DAFn4yJ-AfDd4ADTFhQn-uXA593.mp3';
-    audio.play().catch(() => {
-        document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#fff;font-size:18px;font-family:Microsoft YaHei,sans-serif;text-align:center;padding:20px;">音频加载失败<br>请检查网络后重试</div>';
-    });
+    srcIdx++;
+    if (srcIdx < sources.length) {
+        audio.src = sources[srcIdx];
+        audio.play().catch(() => {});
+    } else {
+        document.querySelector('.playing-text').textContent = '🎵 播放完毕，感谢聆听 ❤️';
+        setTimeout(() => { window.close(); }, 2000);
+    }
 });
 
 document.addEventListener('keydown', (e) => {
