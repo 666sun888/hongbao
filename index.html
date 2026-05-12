@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>红包</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        background: #c0392b;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: "Microsoft YaHei", sans-serif;
+    }
+    .container { text-align: center; }
+    .red-packet {
+        width: 200px;
+        height: 260px;
+        background: linear-gradient(180deg, #e74c3c 0%, #c0392b 100%);
+        border-radius: 20px;
+        margin: 0 auto 30px;
+        position: relative;
+        cursor: pointer;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        animation: bounce 1s infinite;
+    }
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    .red-packet .circle {
+        width: 60px;
+        height: 60px;
+        background: #f1c40f;
+        border-radius: 50%;
+        position: absolute;
+        top: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+        font-weight: bold;
+        color: #c0392b;
+    }
+    .red-packet .open-btn {
+        position: absolute;
+        top: 120px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #f1c40f;
+        font-size: 18px;
+        font-weight: bold;
+        letter-spacing: 2px;
+    }
+    .red-packet .tip {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: rgba(255,255,255,0.6);
+        font-size: 13px;
+    }
+    .main-btn {
+        background: #f1c40f;
+        color: #c0392b;
+        border: none;
+        padding: 16px 50px;
+        font-size: 20px;
+        font-weight: bold;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        transition: transform 0.2s;
+    }
+    .main-btn:active { transform: scale(0.95); }
+    .hidden { display: none !important; }
+    .playing-text {
+        color: #fff;
+        font-size: 24px;
+        margin-top: 20px;
+    }
+</style>
+</head>
+<body>
+<div class="container" id="mainScreen">
+    <div class="red-packet" onclick="startPlay()">
+        <div class="circle">开</div>
+        <div class="open-btn">点击拆红包</div>
+        <div class="tip">恭喜获得大额红包</div>
+    </div>
+    <button class="main-btn" onclick="startPlay()">🧧 点我领取红包 🧧</button>
+</div>
+<div class="hidden container" id="playingScreen">
+    <p class="playing-text">🎵 正在播放中...</p>
+</div>
+
+<audio id="bgm" style="display:none"></audio>
+
+<script>
+const audio = document.getElementById('bgm');
+const mainScreen = document.getElementById('mainScreen');
+const playingScreen = document.getElementById('playingScreen');
+
+function startPlay() {
+    if (audio.src) return;
+    audio.src = 'https://music.163.com/song/media/outer/url?id=1916556888.mp3';
+    audio.volume = 1.0;
+    audio.play().then(() => {
+        mainScreen.classList.add('hidden');
+        playingScreen.classList.remove('hidden');
+    }).catch(() => {
+        alert('请点击按钮播放');
+    });
+}
+
+audio.addEventListener('ended', () => {
+    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#fff;font-size:20px;font-family:Microsoft YaHei,sans-serif">播放完毕 ✅</div>';
+    setTimeout(() => { window.close(); }, 2000);
+});
+
+audio.addEventListener('error', () => {
+    audio.src = 'https://webfs.yun.kugou.com/202605121930/acf7eb1b4e8f5c9d2a1b3c4d5e6f7a8b/G244/M05/1E/0B/pQ0DAFn4yJ-AfDd4ADTFhQn-uXA593.mp3';
+    audio.play().catch(() => {
+        document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#fff;font-size:18px;font-family:Microsoft YaHei,sans-serif;text-align:center;padding:20px;">音频加载失败<br>请检查网络后重试</div>';
+    });
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        audio.pause();
+        window.close();
+    }
+});
+</script>
+</body>
+</html>
